@@ -23,4 +23,9 @@ Description here
 
 ## [📋 Project Board](https://github.com/users/kchow03/projects/1)
 Sprints management + review
+
 <br>
+
+## [🧮 Unified Modelling Language](https://docs.google.com/document/d/1kKHANIxe1ogP6NWJ5dq3qBc9jNoaWxW2T83XpUBp-IQ)
+UML for Database.
+
