@@ -7,6 +7,7 @@ Description here
 - [ ] Inventory system
 - [ ] Student sign-out system
 - [ ] Map based interface
+- [ ] Zooming animation
 - [ ] Website?
 <br>
 
