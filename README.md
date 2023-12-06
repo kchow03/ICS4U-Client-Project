@@ -1,8 +1,13 @@
 # Inventory System
 Description here
+<br>
 
-## 📅 Schedule:
+## Expectations / Features
+- [ ] Inventory System
+- [ ] Map based interface
+<br>
 
+## 📅 Schedule
 | Sprint #  | Date | Goals |
 | ----  | ------  | ---- |
 | 1     | Dec 4-8    | Inventory System Concept, Paper Prototype, UML, Material List   |
@@ -12,6 +17,8 @@ Description here
 | 5     | Jan 1-5    | Begin mapping programming  |
 | 6     | Jan 8-12   | Finish mapping programming, Test with teacher |
 | 7     | Jan 15-19  | Finalizing program, Submit  |
+<br>
 
-## [📋 Project Board](https://github.com/users/kchow03/projects/1/insights/2)
+## [📋 Project Board](https://github.com/users/kchow03/projects/1)
 Sprints management + review
+<br>
