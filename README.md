@@ -4,6 +4,7 @@ Description here
 <br>
 
 ## Expectations / Features
+- [x] JSON based filesystem
 - [ ] Each compartment has an inventory
 - [ ] Inventory system
 - [ ] Student sign-out system
