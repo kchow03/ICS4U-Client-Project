@@ -4,7 +4,8 @@ Description here
 <br>
 
 ## Expectations / Features
-- [ ] Inventory System
+- [ ] Inventory system
+- [ ] Student sign-out system
 - [ ] Map based interface
 - [ ] Website?
 <br>
