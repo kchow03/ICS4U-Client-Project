@@ -1,4 +1,4 @@
-# Inventory System
+![image](https://github.com/kchow03/ICS4U-Client-Project/assets/152993409/088493cf-8b24-439f-ae2f-774cf6b7df3c)# Inventory System
 Description here
 
 <br>
@@ -31,4 +31,10 @@ Sprints management + review
 
 ## [🧮 Unified Modelling Language](https://docs.google.com/document/d/1kKHANIxe1ogP6NWJ5dq3qBc9jNoaWxW2T83XpUBp-IQ)
 UML for Database.
+
+<br>
+
+## 📁 Database Model
+![image](https://github.com/kchow03/ICS4U-Client-Project/assets/152993409/62dd24a5-ea02-4987-b3c4-6185e7cd0857)
+
 
