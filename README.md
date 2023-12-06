@@ -1,4 +1,4 @@
-![image](https://github.com/kchow03/ICS4U-Client-Project/assets/152993409/088493cf-8b24-439f-ae2f-774cf6b7df3c)# Inventory System
+# Inventory System
 Description here
 
 <br>
