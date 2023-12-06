@@ -3,7 +3,7 @@ Description here
 
 <br>
 
-## Expectations / Features
+## ✨ Expectations / Features
 - [x] JSON based filesystem
 - [ ] Each compartment has an inventory
 - [ ] Inventory system
