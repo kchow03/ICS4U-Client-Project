@@ -1,10 +1,12 @@
 # Inventory System
 Description here
+
 <br>
 
 ## Expectations / Features
 - [ ] Inventory System
 - [ ] Map based interface
+- [ ] Website?
 <br>
 
 ## 📅 Schedule
