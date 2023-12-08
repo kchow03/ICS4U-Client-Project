@@ -4,7 +4,7 @@ Description here
 <br>
 
 ## ✨ Expectations / Features
-- [x] JSON based filesystem
+- [x] JSON-based filesystem
 - [ ] Each compartment has an inventory
 - [ ] Inventory system
 - [ ] Student sign-out system
@@ -36,6 +36,8 @@ UML for Database.
 <br>
 
 ## 📁 Database Model
-![image](https://github.com/kchow03/ICS4U-Client-Project/assets/152993409/62dd24a5-ea02-4987-b3c4-6185e7cd0857)
+Inventory.json|ItemsList.json
+:------------:|:------------:
+![](https://github.com/kchow03/ICS4U-Client-Project/assets/152993409/62dd24a5-ea02-4987-b3c4-6185e7cd0857)|![image](https://github.com/kchow03/ICS4U-Client-Project/assets/152993409/bee93e62-a9a2-4d62-a013-7bc69f731ef8)
 
 
