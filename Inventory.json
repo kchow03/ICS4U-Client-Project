@@ -1,0 +1,18 @@
+{
+    "Cabinet": {
+        "Hammer": {
+            "count": 10
+        }
+    },
+    "Shelf": {
+        "Hammer": {
+            "count": 10
+        },
+        "Screwdriver": {
+            "count": 20
+        },
+        "Gluestick": {
+            "count": 10
+        }
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "Hammer": {
+        "img": "",
+        "type": "Tool"
+    },
+    "Screwdriver": {
+        "img": "",
+        "type": "Tool"
+    },
+    "Gluestick": {
+        "type": "Tool"
+    }
+}
