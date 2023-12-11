@@ -15,7 +15,7 @@ public class Inventory {
 
     public Inventory() {
         Utility util = new Utility();
-        String message, name;
+        String message, selName;
 
         inv = load(); // load on startup
         
@@ -36,29 +36,29 @@ public class Inventory {
             } else if (input == 0) {
                 Utility.clearScreen();
                 System.out.print("New Location Name [-1 to cancel]: ");
-                name = util.getString();
+                selName = util.getString();
 
-                if (name.equals("-1")) continue; // return
-                if (inv.containsKey(name)) {
+                if (selName.equals("-1")) continue; // return
+                if (inv.containsKey(selName)) {
                     util.invalid("Already a location");
                     continue;
                 }
 
                 // make sure to include check that it doesn't already exist
-                inv.put(name, new JSONObject());
+                inv.put(selName, new JSONObject());
                 save();
 
                 input = inv.size()+1;
             } else {
-                name = (String) inv.keySet().toArray()[input-1];
+                selName = (String) inv.keySet().toArray()[input-1];
             }
 
             // inventory system
             // get jsonobject from value array input
-            JSONObject selected = (JSONObject) inv.get(name); // always jsonobject
+            JSONObject selected = (JSONObject) inv.get(selName); // always jsonobject
 
             while (true) {
-                message = "Items:\n";
+                message = "%s - Items:\n".formatted(selName);
                 for (int i = 0; i < selected.size(); i++) {
                     String expandable = (String) selected.keySet().toArray()[i];
                     Object count = ((JSONObject) selected.values().toArray()[i]).get("count");
@@ -79,6 +79,7 @@ public class Inventory {
                     break;
                 }
 
+                String name;
                 if (itemInput == 0) { // add
                     JSONObject items = loadItems();
                     message = "Items:\n";
@@ -172,9 +173,10 @@ public class Inventory {
     private static JSONObject load() {
         try (FileReader file = new FileReader(PATH)) {
             return (JSONObject) JSONValue.parse(file);
-        } catch (IOException e) {
-            // only happens if file doesnt exist
-            return null;
+        } catch (IOException e) {// only happens if file doesnt exist
+            inv = new JSONObject(); // generate empty json to save
+            save(); // generate file
+            return load(); // retry
         }
     }
 
@@ -182,8 +184,8 @@ public class Inventory {
         try (PrintWriter file = new PrintWriter(new FileWriter(PATH))) {
             file.print(inv.toJSONString());
             file.close();
-        } catch (IOException e) {
-            // only happens if file doesn't exist
+        } catch (IOException e) { // file doesn't exist
+            new File(PATH); // generate file
         }
     }
 
@@ -191,16 +193,16 @@ public class Inventory {
         try (BufferedReader file = new BufferedReader(new FileReader(ITEMS_PATH))) {
             return (JSONObject) JSONValue.parse(file);
         } catch (IOException e) {
-            return new JSONObject();
-            // file doesn't exist
+            saveItems(new JSONObject()); // file doesn't exist
+            return loadItems(); // retry
         }
     }
 
     public static void saveItems(JSONObject data) {
         try (PrintWriter file = new PrintWriter(new FileWriter(ITEMS_PATH))) {
             file.print(data);
-        } catch (IOException e) {
-            // file doesn't exist
+        } catch (IOException e) { // file doesn't exist
+            new File(ITEMS_PATH);
         }
     }
 
