@@ -5,8 +5,8 @@ Description here
 
 ## ✨ Expectations / Features
 - [x] JSON-based filesystem
-- [ ] Each compartment has an inventory
-- [ ] Inventory system
+- [x] Each compartment has an inventory
+- [x] Inventory system
 - [ ] Student sign-out system
 - [ ] Map based interface
 - [ ] Zooming animation
