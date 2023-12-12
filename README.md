@@ -7,6 +7,7 @@ Description here
 - [x] JSON-based filesystem
 - [x] Each compartment has an inventory
 - [x] Inventory system
+- [ ] Graphical interface
 - [ ] Student sign-out system
 - [ ] Map based interface
 - [ ] Zooming animation
