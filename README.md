@@ -7,6 +7,21 @@ Description here
 - [x] JSON-based filesystem
 - [x] Each compartment has an inventory
 - [x] Inventory system
+- [ ] Support for CAD files
+  - [ ] Common File Types
+    - [ ] OBJ
+    - [ ] FBX
+    - [ ] gITF
+    - [ ] usd/usdz
+  - [ ] Others
+    - [ ] IGES
+    - [ ] STP/STEP
+    - [ ] IPT
+    - [ ] IAM
+    - [ ] SLD
+    - [ ] JT
+    - [ ] Blend
+    - [ ] etc.
 - [ ] Graphical interface
 - [ ] Student sign-out system
 - [ ] Map based interface
