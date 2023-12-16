@@ -77,7 +77,7 @@ public class Inventory {
         String msg = "Items:\n";
         String[] keys = JSONObject.getNames(items);
         for (int i = 0; i < items.length(); i++) {
-            msg += "[%d] - %s\n".formatted(i+1, keys[i]);
+            msg += String.format("[%d] - %s\n", i+1, keys[i]);
         }
         msg += "\n[0] - Create new\n\n[-1] - Exit\n\nWhat would you like to add? ";
 
@@ -112,7 +112,7 @@ public class Inventory {
         for (int i = 0; i < location.length(); i++) {
             int count = location.getJSONObject(keys[i]).getInt("count");
 
-            msg += "[%d] - %s x %d\n".formatted(i+1, keys[i], count);
+            msg += String.format("[%d] - %s x %d\n", i+1, keys[i], count);
         }
         msg += "\n[0] - Add item\n\n";
         msg += "[-1] - Exit\n\n";
@@ -190,11 +190,7 @@ public class Inventory {
             };
         } while (!locName.equals("exit"));
     }
-
-    public static void main(String[] args) {
-        new Inventory();
-    }
-
+    
     private static JSONObject load(String path) {
         try (FileReader file = new FileReader(path)) {
             JSONObject data = new JSONObject(new JSONTokener(file));
@@ -214,5 +210,9 @@ public class Inventory {
         } catch (IOException e) { // file doesn't exist
             new File(path); // generate file
         }
+    }
+
+    public String getInv() {
+        return inv.toString(2);
     }
 }
