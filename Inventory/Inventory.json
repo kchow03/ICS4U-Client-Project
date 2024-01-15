@@ -1,42 +1,173 @@
 {
-    "Handheld Power Tools": {
-        "bounds": [150, 125, 200, 40],
-        "slots": [
-            {
-                "Screwdriver": {
-                    "count": 10
-                },
-                "Hotglue": {
-                    "count": 1
-                }
-            },
-            {
-                
-            }
-        ]
-    },
-    "Blue Cabinet": {
-        "bounds": [750, 400, 200, 40],
-        "slots": [
-            {
-                
-            }
-        ]
-    },
-    "Big Cabinet": {
-       "bounds": [750, 600, 200, 40],
-        "slots": [
-            {
-                
-            }
-        ]
-    },
-    "Mr Field Cabinet": {
-        "bounds": [120, 600, 200, 40],
-        "slots": [
-            {
-                
-            }
-        ]
-    }
+  "Mr Field Cabinet": {
+    "slots": [{}],
+    "bounds": [
+      120,
+      600,
+      200,
+      40
+    ],
+    "sort": "Item Count",
+    "columns": 3
+  },
+  "Handheld Power Tools": {
+    "slots": [
+      {
+        "a": {"count": 10},
+        "Screwdriver": {"count": 0},
+        "b": {"count": 1},
+        "c": {"count": 10},
+        "d": {"count": 1},
+        "e": {"count": 10},
+        "f": {"count": 1},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "Hotglue": {"count": 1}
+      }
+    ],
+    "bounds": [
+      150,
+      125,
+      200,
+      40
+    ],
+    "sort": "Item Count",
+    "columns": 3
+  },
+  "Big Cabinet": {
+    "slots": [{}],
+    "bounds": [
+      750,
+      600,
+      200,
+      40
+    ],
+    "sort": "Item Count",
+    "columns": 3
+  },
+  "Blue Cabinet": {
+    "slots": [{}],
+    "bounds": [
+      750,
+      400,
+      200,
+      40
+    ],
+    "sort": "Item Count",
+    "columns": 3
+  }
 }

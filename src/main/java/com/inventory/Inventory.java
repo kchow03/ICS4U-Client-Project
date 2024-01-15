@@ -30,17 +30,54 @@ public class Inventory {
         inv = load(PATH);
         items = load(ITEMS_PATH);
     }
+    
+    private JSONObject getLocation(String loc) {
+        return inv.getJSONObject(loc);
+    }
+    
+    private JSONObject getSlot(String loc, int index) {
+        JSONObject location = this.getLocation(loc);
+        return location.getJSONArray("slots").getJSONObject(index);
+    }
+    
+    private JSONObject getItem(String loc, int index, String itemName) {
+        JSONObject slot = this.getSlot(loc, index);
+        return slot.getJSONObject(itemName);
+    }
+    
+    public String getLocationSort(String loc) {
+        JSONObject location = this.getLocation(loc);
+        return location.getString("sort");
+    }
+    
+    public int getLocationColumns(String loc) {
+        JSONObject location = this.getLocation(loc);
+        return location.getInt("columns");
+    }
         
-    public int getNumSlots(String key) {
-        return inv.getJSONObject(key).getJSONArray("slots").length();
+    public int getNumSlots(String loc) {
+        JSONObject location = this.getLocation(loc);
+        return location.getJSONArray("slots").length();
     }
     
-    public int getItemCount(String location, int index, String item) { // cuh
-        return inv.getJSONObject(location).getJSONArray("slots").getJSONObject(index).getJSONObject(item).getInt("count");
+    public int getItemCount(String loc, int index, String itemName) { // cuh
+        JSONObject item = this.getItem(loc, index, itemName);
+        return item.getInt("count");
     }
     
-    public String[] getItems(String location, int index) {
-        String[] items = JSONObject.getNames(inv.getJSONObject(location).getJSONArray("slots").getJSONObject(index));
+    public boolean setItemCount(String loc, int index, String itemName, int count) {
+        if (count >= 0) {
+            JSONObject item = this.getItem(loc, index, itemName);
+            item.put("count", count);
+            save(PATH, inv);
+            return true;
+        }
+        return false;
+    }
+    
+    public String[] getItems(String loc, int index) {
+        JSONObject slot = this.getSlot(loc, index);
+        String[] items = JSONObject.getNames(slot);
         
         if (items == null) {
             items = new String[0];
@@ -51,14 +88,15 @@ public class Inventory {
     
     public String[] getLocations() {
         return JSONObject.getNames(inv);
-    } 
+    }
     
-    public Rectangle getBounds(String key) {
-        JSONArray bounds = inv.getJSONObject(key).getJSONArray("bounds");
+    public Rectangle getBounds(String loc) {
+        JSONObject location = this.getLocation(loc);
+        JSONArray bounds = location.getJSONArray("bounds");
         return new Rectangle(bounds.getInt(0), bounds.getInt(1), bounds.getInt(2), bounds.getInt(3));
     }
     
-    private static void save(String path, JSONObject data) {
+    public static void save(String path, JSONObject data) {
         String jsonString = data.toString(2);
         try (FileWriter file = new FileWriter(path)) {
             file.write(jsonString);
@@ -80,32 +118,4 @@ public class Inventory {
             return load(path); // retry
         }
     }
-
-//    public JSONObject getLoc(String loc) {
-//        JSONObject data = inv.getJSONObject(loc);
-//        return data;
-//    }
-//
-//    public boolean isValidLoc(String loc) {
-//        boolean data = inv.has(loc);
-//        return data;
-//    }
-//
-//    public boolean isValidItem(String item) {
-//        boolean data = items.has(item);
-//        return data;
-//    }
-//
-//    public void changeVal(String loc, String item, int val) {
-//        JSONObject locData = inv.getJSONObject(loc);
-//        int count = locData.getInt(item);
-//        locData.put(item, count+val);
-//
-//        save(PATH, inv);
-//    }
-//
-//
-//    public String getInv() {
-//        return inv.toString(2);
-//    }
 }
