@@ -1,14 +1,14 @@
 {
   "Mr Field Cabinet": {
     "slots": [{}],
+    "columns": 3,
     "bounds": [
       120,
       600,
       200,
       40
     ],
-    "sort": "Item Count",
-    "columns": 3
+    "sort": "Number of items"
   },
   "Handheld Power Tools": {
     "slots": [
@@ -139,35 +139,35 @@
         "Hotglue": {"count": 1}
       }
     ],
+    "columns": 5,
     "bounds": [
       150,
       125,
       200,
       40
     ],
-    "sort": "Item Count",
-    "columns": 3
+    "sort": "Number of items"
   },
   "Big Cabinet": {
     "slots": [{}],
+    "columns": 3,
     "bounds": [
       750,
       600,
       200,
       40
     ],
-    "sort": "Item Count",
-    "columns": 3
+    "sort": "Number of items"
   },
   "Blue Cabinet": {
     "slots": [{}],
+    "columns": 3,
     "bounds": [
       750,
       400,
       200,
       40
     ],
-    "sort": "Item Count",
-    "columns": 3
+    "sort": "Number of items"
   }
 }
