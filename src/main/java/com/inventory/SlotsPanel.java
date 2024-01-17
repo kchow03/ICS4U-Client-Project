@@ -106,6 +106,7 @@ public class SlotsPanel extends Panel {
         sortBox.setSelectedIndex(Arrays.asList(GUI.SORT_METHODS).indexOf(inv.getSort(loc)));
         sortBox.addActionListener((ActionListener) listener);
         
+        slotsPanel.removeAll();
         for (int i = 0; i < inv.getNumSlots(loc); i++) {
             int numItems = inv.getSlotItemsCount(loc, i);
             int numTotalItems = inv.getSlotTotalItemsCount(loc, i);
@@ -134,7 +135,7 @@ public class SlotsPanel extends Panel {
         
         int numSlots = inv.getNumSlots(loc);
         GridButton[] buttons = new GridButton[numSlots];
-                
+        
         for (int i = 0; i < numSlots; i++) { // ignores add button
             buttons[i] = (GridButton) slotsPanel.getComponent(i);
         }
