@@ -1,7 +1,7 @@
 package com.inventory;
 
 import java.awt.Color;
-import java.awt.event.ActionListener;
+import java.util.EventListener;
 import javax.swing.JPanel;
 
 public abstract class Panel extends JPanel {
@@ -10,7 +10,7 @@ public abstract class Panel extends JPanel {
     public final BackButton backButton;
     
     
-    public Panel(ActionListener actionListener, int w, int h) {
+    public Panel(EventListener listener, int w, int h) {
         WIDTH = w;
         HEIGHT = h;
         
@@ -18,7 +18,7 @@ public abstract class Panel extends JPanel {
         this.setLayout(null);
         this.setBackground(Color.decode("#130e0f"));
         
-        backButton = new BackButton(actionListener);
+        backButton = new BackButton(listener);
         
         this.setVisible(false);
     }    

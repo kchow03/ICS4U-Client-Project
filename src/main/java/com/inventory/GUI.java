@@ -56,7 +56,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
         });
         
         locationsPanel = new LocationsPanel(this, WIDTH, HEIGHT, image, inv);
-        slotsPanel = new SlotsPanel(this, this, WIDTH, HEIGHT);
+        slotsPanel = new SlotsPanel(this, WIDTH, HEIGHT);
         itemsPanel = new ItemsPanel(this, WIDTH, HEIGHT);
         
         this.add(locationsPanel);
@@ -114,8 +114,9 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
 //                    l.setText(j.getSelectedFile().getAbsolutePath());
             }
         } else if (type.equals("sortSlots")) {
-            JComboBox selectBox = (JComboBox) e.getSource();
-            slotsPanel.sortButtons(this, inv, location, selectBox.getSelectedIndex());
+            String selected = (String) ((JComboBox) e.getSource()).getSelectedItem();
+            inv.setLocationSort(location, selected);
+            slotsPanel.update(inv, location);
         } else {
             if (!type.equals("back")) {
                 current = type;
@@ -128,7 +129,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
                 if (data != null) location = data;
                 
                 this.hidePanels(slotsPanel);
-                slotsPanel.update(this, inv, location);
+                slotsPanel.refresh(this, inv, location);
 
             } else if (current.equals("slot")) {
                 if (data != null) slot = Integer.parseInt(data);
@@ -152,8 +153,8 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
         if (type.equals("slots")) {
             int value = source.getValue();
         
-            inv.setNumColumns(location, value);
-            slotsPanel.updateColumns(value); 
+            inv.setLocationColumns(location, value);
+            slotsPanel.update(inv, location);
         }   
     }
 

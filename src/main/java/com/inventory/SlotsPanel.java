@@ -2,12 +2,15 @@ package com.inventory;
 
 import javax.swing.*;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionListener;
 import javax.swing.event.ChangeListener;
+import java.util.List;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.EventListener;
 
 public class SlotsPanel extends Panel {
     private final JButton imageButton;
@@ -17,9 +20,10 @@ public class SlotsPanel extends Panel {
     private final GridLayout layout;
     private final JComboBox sortBox;
     private final JSlider columnSlider;
+    private final GridButton addButton;
     
-    public SlotsPanel(ActionListener actionLister, ChangeListener changeListener, int w, int h) {
-        super(actionLister, w, h);
+    public SlotsPanel(EventListener listener, int w, int h) {
+        super(listener, w, h);
         
         imageButton = new JButton();
         imagePreview = new JLabel("No image preview");
@@ -59,16 +63,18 @@ public class SlotsPanel extends Panel {
         
         sortBox.setName("sortSlots");
         sortBox.setBounds(contentGap+GUI.GAP*3, GUI.GAP*5, GUI.GAP*8, GUI.GAP*2);
-        sortBox.addActionListener(actionLister);
+        sortBox.addActionListener((ActionListener) listener);
         columnSlider.setBounds(WIDTH-GUI.GAP*7, GUI.GAP*5, GUI.GAP*5, GUI.GAP*2);
         columnSlider.setBackground(Color.decode("#1c1617"));
-        columnSlider.addChangeListener(changeListener);
+        columnSlider.addChangeListener((ChangeListener) listener);
         columnSlider.setName("slots");
+        
+        addButton = new GridButton((ActionListener) listener, "addSlot", "+");
         
         imageButton.setSize(WIDTH/5*3, HEIGHT);
         imageButton.setLayout(null);
         imageButton.setName("image");
-        imageButton.addActionListener(actionLister);
+        imageButton.addActionListener((ActionListener) listener);
         
         imagePreview.setSize(WIDTH/5*3, HEIGHT);
         
@@ -84,62 +90,74 @@ public class SlotsPanel extends Panel {
         this.add(scrollable);
     }
     
-    public void update(ActionListener actionListener, Inventory inv, String loc) {
+    public void refresh(EventListener listener, Inventory inv, String loc) {
         String path = String.format("%s/%s/%s.png", GUI.FOLDER, "Locations", loc); 
         ImageIcon image = new ImageIcon(path);
         Image scaledImage = image.getImage().getScaledInstance(WIDTH/5*3, HEIGHT, Image.SCALE_SMOOTH);
-        
-        locationTitle.setText(loc);
         imagePreview.setIcon(new ImageIcon(scaledImage));
         
-        String sort = inv.getSort(loc);
+        locationTitle.setText(loc);
+        
+        columnSlider.removeChangeListener((ChangeListener) listener);
         columnSlider.setValue(inv.getLocationColumns(loc));
-        sortBox.setSelectedIndex(Arrays.asList(GUI.SORT_METHODS).indexOf(sort));
-                
-        int sortMethod = Arrays.asList(GUI.SORT_METHODS).indexOf(sort);
-        sortButtons(actionListener, inv, loc, sortMethod); // for not overwriting sort and filter
-        updateColumns(inv.getLocationColumns(loc));
-    }
-    
-    public void sortButtons(ActionListener actionListener, Inventory inv, String loc, int sort) {
-        slotsPanel.removeAll();
         
-        int numSlots = inv.getNumSlots(loc);
-        GridButton[] buttons = new GridButton[numSlots];
+        // force no listener
+        sortBox.removeActionListener((ActionListener) listener);
+        sortBox.setSelectedIndex(Arrays.asList(GUI.SORT_METHODS).indexOf(inv.getSort(loc)));
+        sortBox.addActionListener((ActionListener) listener);
         
-        int columns = inv.getLocationColumns(loc);
-        int size = (WIDTH/5*2-GUI.GAP*3-GUI.GAP*(columns-1))/columns;
-        for (int i = 0; i < numSlots; i++) {
-            int numItems = inv.getNumItems(loc, i);
-            int numTotalItems = inv.getNumTotalItems(loc, i);
+        for (int i = 0; i < inv.getNumSlots(loc); i++) {
+            int numItems = inv.getSlotItemsCount(loc, i);
+            int numTotalItems = inv.getSlotTotalItemsCount(loc, i);
             
             // accepts html for line break
             String text = "<html>Slot: %d<br>Item count: %d<br>Total item count: %d</html>".formatted(i, numItems, numTotalItems);
             String name = "slot|%d|%d|%d".formatted(i, numItems, numTotalItems);
-            GridButton slotButton = new GridButton(actionListener, name, text, size);
-            buttons[i] = slotButton;
-        }        
+            GridButton slotButton = new GridButton((ActionListener) listener, name, text);
+            slotsPanel.add(slotButton);
+        }       
         
+        update(inv, loc);
+    }
+    
+//    public void update(ActionListener actionListener, Inventory inv, String loc) {
+//
+//                
+//        int sortMethod = Arrays.asList(GUI.SORT_METHODS).indexOf(sort);
+//        sortButtons(actionListener, inv, loc, sortMethod); // for not overwriting sort and filter
+//        updateColumns(inv.getLocationColumns(loc));
+//    }
+    
+    public void update(Inventory inv, String loc) {
+        int columns = inv.getLocationColumns(loc);
+        layout.setColumns(columns);
+        
+        int numSlots = inv.getNumSlots(loc);
+        GridButton[] buttons = new GridButton[numSlots];
+                
+        for (int i = 0; i < numSlots; i++) { // ignores add button
+            buttons[i] = (GridButton) slotsPanel.getComponent(i);
+        }
+        slotsPanel.removeAll();
+        
+        List<String> sortMethods = Arrays.asList(GUI.SORT_METHODS);
         Comparator<GridButton> comparator = Comparator.comparingInt(button -> {
-            String value = button.button.getName().split("\\|")[sort+1]; // first is slot
+            int sort = sortMethods.indexOf(inv.getLocationSort(loc)) + 1;// first is "slot"
+            String value = button.getButtonActionCommand().split("\\|")[sort];
             
             return Integer.parseInt(value);
         });
         Arrays.sort(buttons, comparator);
         
+        int size = (WIDTH/5*2-GUI.GAP*3-GUI.GAP*(columns-1))/columns;
         for (GridButton slotButton: buttons) {
+            slotButton.setButtonSize(size);
             slotsPanel.add(slotButton);
         }
         
-        GridButton addButton = new GridButton(actionListener, "addSlot", "+", size);
+        // last
+        addButton.setButtonSize(size);
         slotsPanel.add(addButton);
-        
-        slotsPanel.revalidate();
-        slotsPanel.repaint();
-    }
-    
-    public void updateColumns(int columns) {
-        layout.setColumns(columns);
         
         // refresh
         slotsPanel.revalidate();

@@ -139,7 +139,7 @@
         "Hotglue": {"count": 1}
       }
     ],
-    "columns": 5,
+    "columns": 1,
     "bounds": [
       150,
       125,
@@ -161,7 +161,7 @@
   },
   "Blue Cabinet": {
     "slots": [{}],
-    "columns": 3,
+    "columns": 1,
     "bounds": [
       750,
       400,

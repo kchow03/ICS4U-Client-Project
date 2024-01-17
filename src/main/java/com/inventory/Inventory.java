@@ -50,9 +50,19 @@ public class Inventory {
         return location.getString("sort");
     }
     
+    public void setLocationSort(String loc, String sort) {
+        JSONObject location = this.getLocation(loc);
+        location.put("sort", sort);
+    }
+    
     public int getLocationColumns(String loc) {
         JSONObject location = this.getLocation(loc);
         return location.getInt("columns");
+    }
+    
+    public void setLocationColumns(String loc, int columns) {
+        JSONObject location = this.getLocation(loc);
+        location.put("columns", columns);
     }
         
     public int getNumSlots(String loc) {
@@ -60,17 +70,20 @@ public class Inventory {
         return location.getJSONArray("slots").length();
     }
     
-    public int getNumItems(String loc, int index) {
+    public int getSlotItemsCount(String loc, int index) {
         JSONObject slot = this.getSlot(loc, index);
-        
-        return slot.names().length(); // returns num elements
+        return slot.length(); // returns num elements
     }
     
-    public int getNumTotalItems(String loc, int index) {
+    public int getSlotTotalItemsCount(String loc, int index) {
         JSONObject slot = this.getSlot(loc, index);
         int total = 0;
         
-        for (Object itemName: slot.names()) {
+        if (slot.length() == 0) {
+            return 0;
+        }
+        
+        for (Object itemName: slot.names()) { // null if empty
             JSONObject item = slot.getJSONObject((String) itemName); // object into string
             total += item.getInt("count");
         }
@@ -87,7 +100,6 @@ public class Inventory {
         if (count >= 0) {
             JSONObject item = this.getItem(loc, index, itemName);
             item.put("count", count);
-            save(PATH, inv);
             return true;
         }
         return false;
@@ -109,11 +121,6 @@ public class Inventory {
         return location.getString("sort");
     }
     
-    public void setNumColumns(String loc, int numColumns) {
-        JSONObject location = this.getLocation(loc);
-        location.put("columns", numColumns);
-    }
-    
     public String[] getLocations() {
         return JSONObject.getNames(inv);
     }
@@ -125,32 +132,15 @@ public class Inventory {
     }
     
     public void save() {
-        try {
-            FileWriter file = new FileWriter(PATH);
-            FileWriter items_file = new FileWriter(ITEMS_PATH);
-            
-            file.write(inv.toString(2));
-            items_file.write(items.toString(2));
-            
-            System.out.println(inv.toString(2));
-            
-            file.close();
-            items_file.close();
-        } catch (IOException e) {
-            new File(PATH); // create file
-            new File(ITEMS_PATH); // create items path
-            save(); // retry
-        }
-    }
-    
-    public static void save(String path, JSONObject data) {
-        String jsonString = data.toString(2);
-        try (FileWriter file = new FileWriter(path)) {
-            file.write(jsonString);
-            file.close();
-        } catch (IOException e) { // file doesn't exist
-            new File(path); // generate file
-            save(path, data); // retry
+        String[] paths = {PATH, ITEMS_PATH};
+        for (String path: paths) {
+            try (FileWriter file = new FileWriter(path);) {
+                file.write(inv.toString(2));            
+                file.close();
+            } catch (IOException e) { // file doesn't exist
+                new File(path); // create file
+                save();
+            }
         }
     }
     
@@ -161,8 +151,7 @@ public class Inventory {
             
             return data;
         } catch (IOException e) { // file doesn't exist
-            save(path, new JSONObject()); // generate file
-            return load(path); // retry
+            return new JSONObject();
         }
     }
 }
