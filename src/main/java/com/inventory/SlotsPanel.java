@@ -2,7 +2,6 @@ package com.inventory;
 
 import javax.swing.*;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionListener;
@@ -14,7 +13,6 @@ import java.util.EventListener;
 
 public class SlotsPanel extends Panel {
     private final JButton imageButton;
-    private final JLabel imagePreview;
     private final JLabel locationTitle;
     private final JPanel slotsPanel;
     private final GridLayout layout;
@@ -26,7 +24,6 @@ public class SlotsPanel extends Panel {
         super(listener, w, h);
         
         imageButton = new JButton();
-        imagePreview = new JLabel("No image preview");
         
         locationTitle = new JLabel();
         layout = new GridLayout(0, 3, GUI.GAP, GUI.GAP);
@@ -74,12 +71,8 @@ public class SlotsPanel extends Panel {
         imageButton.setSize(WIDTH/5*3, HEIGHT);
         imageButton.setLayout(null);
         imageButton.setName("image");
-        imageButton.addActionListener((ActionListener) listener);
-        
-        imagePreview.setSize(WIDTH/5*3, HEIGHT);
-        
-        imagePreview.add(backButton);
-        imageButton.add(imagePreview);
+        imageButton.addActionListener((ActionListener) listener);        
+        imageButton.add(backButton);
         
         this.add(sortByLabel);
         this.add(columnLabel);
@@ -94,12 +87,13 @@ public class SlotsPanel extends Panel {
         String path = String.format("%s/%s/%s.png", GUI.FOLDER, "Locations", loc); 
         ImageIcon image = new ImageIcon(path);
         Image scaledImage = image.getImage().getScaledInstance(WIDTH/5*3, HEIGHT, Image.SCALE_SMOOTH);
-        imagePreview.setIcon(new ImageIcon(scaledImage));
+        imageButton.setIcon(new ImageIcon(scaledImage));
         
         locationTitle.setText(loc);
         
         columnSlider.removeChangeListener((ChangeListener) listener);
         columnSlider.setValue(inv.getLocationColumns(loc));
+        columnSlider.addChangeListener((ChangeListener) listener);
         
         // force no listener
         sortBox.removeActionListener((ActionListener) listener);
@@ -120,14 +114,6 @@ public class SlotsPanel extends Panel {
         
         update(inv, loc);
     }
-    
-//    public void update(ActionListener actionListener, Inventory inv, String loc) {
-//
-//                
-//        int sortMethod = Arrays.asList(GUI.SORT_METHODS).indexOf(sort);
-//        sortButtons(actionListener, inv, loc, sortMethod); // for not overwriting sort and filter
-//        updateColumns(inv.getLocationColumns(loc));
-//    }
     
     public void update(Inventory inv, String loc) {
         int columns = inv.getLocationColumns(loc);

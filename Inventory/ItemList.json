@@ -139,7 +139,7 @@
         "Hotglue": {"count": 1}
       }
     ],
-    "columns": 1,
+    "columns": 4,
     "bounds": [
       150,
       125,
@@ -168,6 +168,6 @@
       200,
       40
     ],
-    "sort": "Number of items"
+    "sort": "Slot"
   }
 }

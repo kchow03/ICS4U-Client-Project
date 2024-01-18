@@ -1,5 +1,6 @@
 package com.inventory;
 
+import java.awt.Image;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +24,8 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
     private final LocationsPanel locationsPanel;
     private final SlotsPanel slotsPanel;
     private final ItemsPanel itemsPanel;
+    private final ToolsPanel toolsPanel;
+    private final JButton toolsButton;
     private String location;
     private int slot;
     private String item;
@@ -38,7 +41,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
         
         ImageIcon image = new ImageIcon("topdown.png");
         WIDTH = image.getIconWidth();
-        HEIGHT = image.getIconHeight();
+        HEIGHT = image.getIconHeight() - 30; // exclude topbar
         inv = new Inventory();
         
         // setup jframe
@@ -58,11 +61,21 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
         locationsPanel = new LocationsPanel(this, WIDTH, HEIGHT, image, inv);
         slotsPanel = new SlotsPanel(this, WIDTH, HEIGHT);
         itemsPanel = new ItemsPanel(this, WIDTH, HEIGHT);
+        toolsPanel = new ToolsPanel(this);
+        toolsButton = new JButton();
         
+        ImageIcon imageIcon = new ImageIcon(FOLDER + "/Settings.png");
+        Image toolsImage = imageIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        toolsButton.setIcon(new ImageIcon(toolsImage));
+        toolsButton.setBounds(WIDTH - (50+GAP), HEIGHT - (50+GAP), 50, 50);
+        toolsButton.setName("settings");
+        toolsButton.addActionListener(this);
+        toolsButton.setContentAreaFilled(false);
+        
+        locationsPanel.add(toolsButton);
         this.add(locationsPanel);
         this.add(slotsPanel);
         this.add(itemsPanel);
-        
         this.setVisible(true);
     }
     
@@ -76,7 +89,8 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        String[] name = ((JComponent) e.getSource()).getName().split("\\|");
+        JComponent component = (JComponent) e.getSource();
+        String[] name = component.getName().split("\\|");
         String type = name[0];
         String data = null;
                 
@@ -90,60 +104,70 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
             }
         }
         
-        if (type.equals("image")) {
-            JFileChooser chooser = new JFileChooser();
-            chooser.setAcceptAllFileFilterUsed(false);
+        switch (type) {
+            case "image":
+                JFileChooser chooser = new JFileChooser();
+                chooser.setAcceptAllFileFilterUsed(false);
 
-            chooser.setDialogTitle("Select an image for the location preview");
+                chooser.setDialogTitle("Select an image for the location preview");
 
-            FileNameExtensionFilter restriction = new FileNameExtensionFilter("Select a .png file", "png");
-            chooser.addChoosableFileFilter(restriction);
+                FileNameExtensionFilter restriction = new FileNameExtensionFilter("Select a .png file", "png");
+                chooser.addChoosableFileFilter(restriction);
 
-            int r = chooser.showOpenDialog(null);
-            if (r == JFileChooser.APPROVE_OPTION) {
-                Path source = new File(chooser.getSelectedFile().getAbsolutePath()).toPath();
-                Path destination = new File("%s/%s/%s.png".formatted(FOLDER, "Location", location)).toPath();
+                int r = chooser.showOpenDialog(null);
+                if (r == JFileChooser.APPROVE_OPTION) {
+                    Path source = new File(chooser.getSelectedFile().getAbsolutePath()).toPath();
+                    Path destination = new File("%s/%s/%s.png".formatted(FOLDER, "Location", location)).toPath();
 
-                try {
-                    Files.copy(source, destination);
-                } catch (IOException exception) {
+                    try {
+                        Files.copy(source, destination);
+                    } catch (IOException exception) {
 
+                    }
+
+                    // set the label to the path of the selected file
+    //                    l.setText(j.getSelectedFile().getAbsolutePath());
                 }
-
-                // set the label to the path of the selected file
-//                    l.setText(j.getSelectedFile().getAbsolutePath());
-            }
-        } else if (type.equals("sortSlots")) {
-            String selected = (String) ((JComboBox) e.getSource()).getSelectedItem();
-            inv.setLocationSort(location, selected);
-            slotsPanel.update(inv, location);
-        } else {
-            if (!type.equals("back")) {
-                current = type;
-                data = name[1];
-            }
-            
-            if (current.equals("home")) {
-                this.hidePanels(locationsPanel);
-            } else if (current.equals("location")) {
-                if (data != null) location = data;
+                break;
+            case "sortSlots":
+                String selected = (String) ((JComboBox) e.getSource()).getSelectedItem();
+                inv.setLocationSort(location, selected);
+                slotsPanel.update(inv, location);
+                break;
+            case "settings":
+                toolsPanel.setVisible(true);
                 
-                this.hidePanels(slotsPanel);
-                slotsPanel.refresh(this, inv, location);
-
-            } else if (current.equals("slot")) {
-                if (data != null) slot = Integer.parseInt(data);
+                break;
+            default:
+                if (!type.equals("back")) {
+                    current = type;
+                    data = name[1];
+                }
                 
-                this.hidePanels(itemsPanel);
-//                itemsPanel.update();
-            } else if (current.equals("item")) {
+                switch (current) {
+                    case "home":
+                        this.hidePanels(locationsPanel);
+                        break;
+                    case "location":
+                        if (data != null) location = data;
 
+                        this.hidePanels(slotsPanel);
+                        slotsPanel.refresh(this, inv, location);
+                        break;
+                    case "slot":
+                        if (data != null) slot = Integer.parseInt(data);
+
+                        this.hidePanels(itemsPanel);
+        //                itemsPanel.update();
+                        break;
+                    case "item":
+                        
+                        break;
+                }
+                break;
             }
         }
-        
-        
-        
-    }
+    
     
     @Override
     public void stateChanged(ChangeEvent e) {
@@ -160,5 +184,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new GUI());
+        
+        new PolygonClass();
     }
 }
