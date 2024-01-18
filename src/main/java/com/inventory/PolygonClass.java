@@ -7,7 +7,6 @@ import java.awt.Polygon;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.EventListener;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
@@ -16,34 +15,17 @@ public class PolygonClass extends JFrame implements MouseListener {
     private int buttonsCount = 0;
     private int addButton = 0;
     private Point[] points = new Point[4];
-    
+
     public PolygonClass() {
         this.setSize(400, 400);
-        
+                
         this.addMouseListener(this);
         this.setVisible(true);
     }
     
 //     from chatgpt
     public boolean isValidPolygon() {
-        for (int i = 0; i < 4; i++) {
-            if (areCollinear(points[i], points[(i+1)%4], points[(i+2)%4])) {
-                return false;
-            }
-        }
         return true;
-        
-//        if (areCollinear(x1, y1, x2, y2, x3, y3) || areCollinear(x2, y2, x3, y3, x4, y4)
-//                || areCollinear(x3, y3, x4, y4, x1, y1) || areCollinear(x4, y4, x1, y1, x2, y2)) {
-//            return false;
-//        }
-//
-//        return true;
-    }
-    
-    // from chatgpt
-    public static boolean areCollinear(Point p1, Point p2, Point p3) {
-        return (p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) == 0;
     }
     
     @Override
@@ -73,25 +55,21 @@ public class PolygonClass extends JFrame implements MouseListener {
             
             if (addButton == 3) { // last button
                 if (isValidPolygon()) {
-                    this.removeMouseListener(this);
                     System.out.println("gg");
                     
                     Polygon poly = new Polygon();
                     
-//                    for (Point point: points) {
-//                        poly.addPoint(point.x, point.y);
-//                    }
-
-                    poly.addPoint(100, 100);
-                    poly.addPoint(200, 100);
-                    poly.addPoint(200, 200);
-                    poly.addPoint(100, 200);
+                    for (Point point: points) {
+                        poly.addPoint(point.x, point.y);
+                    }
 
                     buttons[buttonsCount] = new PolygonButton(poly);
                     this.add(buttons[buttonsCount]);
                     
                     buttons[buttonsCount].repaint();
                     buttonsCount++;
+                    
+                    this.revalidate();
                 } else {
                     System.out.println("bad gg");
                     addButton = 0;
