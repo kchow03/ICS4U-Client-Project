@@ -91,6 +91,14 @@ public class Inventory {
         return total;
     }
     
+    public void addItem(String loc, int index, String itemName, int count) {
+        JSONObject item = new JSONObject();
+        item.put("count", count);
+        
+        JSONObject slot = this.getSlot(loc, index);
+        slot.put(itemName, item);
+    }
+    
     public int getItemCount(String loc, int index, String itemName) { // cuh
         JSONObject item = this.getItem(loc, index, itemName);
         return item.getInt("count");

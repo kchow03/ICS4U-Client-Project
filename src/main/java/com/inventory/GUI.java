@@ -25,6 +25,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Mouse
     private final SlotsPanel slotsPanel;
     private final ItemsPanel itemsPanel;
     private final ToolsPanel toolsPanel;
+    private final AddItemPanel addItemPanel;
     private final JButton toolsButton;
     private String location;
     private int slot;
@@ -68,6 +69,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Mouse
         itemsPanel = new ItemsPanel(this, WIDTH, HEIGHT);
         toolsPanel = new ToolsPanel(this);
         toolsButton = new JButton();
+        addItemPanel = new AddItemPanel(this, WIDTH, HEIGHT);
         
         ImageIcon imageIcon = new ImageIcon(FOLDER + "/Settings.png");
         Image toolsImage = imageIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
@@ -81,6 +83,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Mouse
         this.add(locationsPanel);
         this.add(slotsPanel);
         this.add(itemsPanel);
+        this.add(addItemPanel);
         this.setVisible(true);
     }
     
@@ -88,6 +91,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Mouse
         locationsPanel.setVisible(false);
         slotsPanel.setVisible(false);
         itemsPanel.setVisible(false);
+        addItemPanel.setVisible(false);
         
         panel.setVisible(true);
     }
@@ -132,6 +136,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Mouse
         String[] name = component.getName().split("\\|");
         String type = name[0];
         String data = null;
+        int count;
                 
         if (type.equals("back")) {
             switch (current) {
@@ -143,6 +148,9 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Mouse
                     break;
                 case "item":
                     current = "slot";
+                    break;
+                case "addItem":
+                    current = "item";
                     break;
             }
         }
@@ -191,19 +199,25 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Mouse
                 
                 break;
             case "addItemCount":
-                
+                count = inv.getItemCount(location, slot, item)+1;
+                inv.setItemCount(location, slot, item, count);
+                itemsPanel.update(item, count);
                 break;
             case "subItemCount":
-                
+                count = inv.getItemCount(location, slot, item)-1;
+                inv.setItemCount(location, slot, item, count);
+                itemsPanel.update(item, count);
                 break;
             case "itemCount":
-                
+                count = Integer.parseInt(((JTextField) e.getSource()).getText());
+                inv.setItemCount(location, slot, item, count);
+                itemsPanel.update(item, count);
                 break;
-            case "addItem": 
+            case "submit":
+                inv.addItem(location, slot, addItemPanel.getItemName(), addItemPanel.getItemCount());
                 
-                break;
-            case "addButton":
-                
+                hidePanels(itemsPanel);
+                itemsPanel.refresh(this, inv, location, slot);
                 break;
             default:
                 if (!type.equals("back")) {
@@ -231,6 +245,10 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Mouse
                         if (data != null) item = data;
                         
                         itemsPanel.update(item, inv.getItemCount(location, slot, item));
+                        break;
+                    case "addItem":
+                        addItemPanel.reset();
+                        this.hidePanels(addItemPanel);
                         break;
                 }
                 break;

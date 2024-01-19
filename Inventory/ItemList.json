@@ -20,6 +20,12 @@
         "d": {"count": 1},
         "e": {"count": 10},
         "f": {"count": 1},
+        "placeholder": {"count": 0},
+        "Hotglue": {"count": 1}
+      },
+      {
+        "Screwdriver": {"count": 10},
+        "placeholder": {"count": 0},
         "Hotglue": {"count": 1}
       },
       {
@@ -115,11 +121,7 @@
         "Hotglue": {"count": 1}
       },
       {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
+        "Screwdriver": {"count": 12},
         "Hotglue": {"count": 1}
       },
       {
@@ -139,14 +141,14 @@
         "Hotglue": {"count": 1}
       }
     ],
-    "columns": 4,
+    "columns": 5,
     "bounds": [
       150,
       125,
       200,
       40
     ],
-    "sort": "Number of items"
+    "sort": "Slot"
   },
   "Big Cabinet": {
     "slots": [{}],

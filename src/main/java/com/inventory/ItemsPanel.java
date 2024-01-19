@@ -90,7 +90,7 @@ public class ItemsPanel extends Panel {
             itemsPanel.add(button);
         }
         
-        GridButton addItemButton = new GridButton(listener, "addButton", "+");
+        GridButton addItemButton = new GridButton(listener, "addItem|null", "+"); // null is placeholder
         addItemButton.setButtonSize(size);
         itemsPanel.add(addItemButton);
     }

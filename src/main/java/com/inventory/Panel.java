@@ -16,10 +16,10 @@ public abstract class Panel extends JPanel {
         
         this.setSize(WIDTH, HEIGHT);
         this.setLayout(null);
-        this.setBackground(Color.decode("#130e0f"));
+        this.setBackground(GUI.backgroundColour);
         
         backButton = new BackButton(listener);
         
         this.setVisible(false);
-    }    
+    }
 }
