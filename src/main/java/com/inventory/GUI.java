@@ -1,11 +1,8 @@
 package com.inventory;
 
-import java.awt.Image;
+import java.awt.*;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,7 +11,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class GUI extends JFrame implements ActionListener, ChangeListener {
+public class GUI extends JFrame implements ActionListener, ChangeListener, MouseListener {
+    public static final Color backgroundColour = Color.decode("#130e0f");
+    public static final Color secondaryColour = Color.decode("#1c1617");
+    public static final Color textColour = Color.decode("#5c5845");
     public static final String FOLDER = "Images";
     public static final String[] SORT_METHODS = { "Slot", "Number of items", "Total number of items" }; 
     public static final int GAP = 15;
@@ -30,6 +30,11 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
     private int slot;
     private String item;
     private String current;
+    private Point[] points = new Point[4];
+    private JPanel[] plots = new JPanel[3];
+    private int pointCount = 4;
+    private LocationButton[] locationButtons = new LocationButton[128]; // hard limit
+    private int LBC = 0; // locationButtonCount
     
     public GUI() {
         // set ui type
@@ -58,7 +63,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
             }
         });
         
-        locationsPanel = new LocationsPanel(this, WIDTH, HEIGHT, image, inv);
+        locationsPanel = new LocationsPanel(this, WIDTH, HEIGHT, inv, "topdown.png");
         slotsPanel = new SlotsPanel(this, WIDTH, HEIGHT);
         itemsPanel = new ItemsPanel(this, WIDTH, HEIGHT);
         toolsPanel = new ToolsPanel(this);
@@ -87,7 +92,41 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
         panel.setVisible(true);
     }
     
-    @Override
+    // abstract classes
+    public void mouseExited(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {}
+    
+    
+    public void mouseClicked(MouseEvent e) {
+        if (pointCount < 4) {
+            points[pointCount] = e.getPoint();
+            
+            if (pointCount == 3) { // last plot placed
+                for (int i = 0; i < 3; i++) {
+                    plots[i].setVisible(false);
+                }
+                locationsPanel.reset();
+                
+                locationButtons[LBC] = new LocationButton(points, "e");
+                locationsPanel.add(locationButtons[LBC]);
+                locationButtons[LBC].repaint();
+                locationButtons[LBC].revalidate();
+                LBC++;
+                
+            } else {
+                plots[pointCount] = new JPanel();
+                plots[pointCount].setBounds(points[pointCount].x, points[pointCount].y, 5, 5);
+                plots[pointCount].setBackground(Color.RED);
+                locationsPanel.add(plots[pointCount]);
+                locationsPanel.repaint();
+            }
+            
+            pointCount++;
+        }
+    }
+    
     public void actionPerformed(ActionEvent e) {
         JComponent component = (JComponent) e.getSource();
         String[] name = component.getName().split("\\|");
@@ -95,12 +134,16 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
         String data = null;
                 
         if (type.equals("back")) {
-            if (current.equals("location")) {
-                current = "home";
-            } else if (current.equals("slot")) {
-                current = "location";
-            } else if (current.equals("item")) {
-                current = "slot";
+            switch (current) {
+                case "location":
+                    current = "home";
+                    break;
+                case "slot":
+                    current = "location";
+                    break;
+                case "item":
+                    current = "slot";
+                    break;
             }
         }
         
@@ -138,6 +181,30 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
                 toolsPanel.setVisible(true);
                 
                 break;
+                
+            case "addLocation":
+                pointCount = 0;
+                locationsPanel.darken();
+                toolsPanel.setVisible(false);
+                break;
+            case "remLocation":
+                
+                break;
+            case "addItemCount":
+                
+                break;
+            case "subItemCount":
+                
+                break;
+            case "itemCount":
+                
+                break;
+            case "addItem": 
+                
+                break;
+            case "addButton":
+                
+                break;
             default:
                 if (!type.equals("back")) {
                     current = type;
@@ -158,18 +225,18 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
                         if (data != null) slot = Integer.parseInt(data);
 
                         this.hidePanels(itemsPanel);
-        //                itemsPanel.update();
+                        itemsPanel.refresh(this, inv, location, slot);
                         break;
                     case "item":
+                        if (data != null) item = data;
                         
+                        itemsPanel.update(item, inv.getItemCount(location, slot, item));
                         break;
                 }
                 break;
             }
         }
     
-    
-    @Override
     public void stateChanged(ChangeEvent e) {
         JSlider source = (JSlider) e.getSource(); // always slider
         String type = source.getName();
@@ -181,10 +248,8 @@ public class GUI extends JFrame implements ActionListener, ChangeListener {
             slotsPanel.update(inv, location);
         }   
     }
-
+    
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new GUI());
-        
-        new PolygonClass();
+        new GUI();
     }
 }
