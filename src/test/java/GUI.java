@@ -16,7 +16,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Mouse
     public static final Color secondaryColour = Color.decode("#1c1617");
     public static final Color textColour = Color.decode("#5c5845");
     public static final String FOLDER = "Images";
-    public static final String[] SORT_METHODS = { "Slot", "Number of items", "Total number of items" }; 
+    public static final String[] SORT_METHODS = ; 
     public static final int GAP = 15;
     private final int WIDTH;
     private final int HEIGHT;
@@ -51,12 +51,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Mouse
         inv = new Inventory();
         
         // setup jframe
-        this.setSize(image.getIconWidth(), image.getIconHeight());
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setResizable(false);
-        this.setLocationRelativeTo(null); // center
-        this.setTitle("Inventory");
-        this.setLayout(null);
+        
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -157,28 +152,7 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Mouse
         
         switch (type) {
             case "image":
-                JFileChooser chooser = new JFileChooser();
-                chooser.setAcceptAllFileFilterUsed(false);
-
-                chooser.setDialogTitle("Select an image for the location preview");
-
-                FileNameExtensionFilter restriction = new FileNameExtensionFilter("Select a .png file", "png");
-                chooser.addChoosableFileFilter(restriction);
-
-                int r = chooser.showOpenDialog(null);
-                if (r == JFileChooser.APPROVE_OPTION) {
-                    Path source = new File(chooser.getSelectedFile().getAbsolutePath()).toPath();
-                    Path destination = new File("%s/%s/%s.png".formatted(FOLDER, "Location", location)).toPath();
-
-                    try {
-                        Files.copy(source, destination);
-                    } catch (IOException exception) {
-
-                    }
-
-                    // set the label to the path of the selected file
-    //                    l.setText(j.getSelectedFile().getAbsolutePath());
-                }
+                
                 break;
             case "sortSlots":
                 String selected = (String) ((JComboBox) e.getSource()).getSelectedItem();
@@ -265,9 +239,5 @@ public class GUI extends JFrame implements ActionListener, ChangeListener, Mouse
             inv.setLocationColumns(location, value);
             slotsPanel.update(inv, location);
         }   
-    }
-    
-    public static void main(String[] args) {
-        new GUI();
     }
 }

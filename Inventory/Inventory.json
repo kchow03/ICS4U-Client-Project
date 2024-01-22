@@ -1,175 +1,48 @@
-{
-  "Mr Field Cabinet": {
-    "slots": [{}],
-    "columns": 3,
-    "bounds": [
-      120,
-      600,
-      200,
-      40
-    ],
-    "sort": "Number of items"
-  },
-  "Handheld Power Tools": {
+{"Handheld Power Tools": {
     "slots": [
-      {
-        "a": {"count": 10},
-        "Screwdriver": {"count": 0},
-        "b": {"count": 1},
-        "c": {"count": 10},
-        "d": {"count": 1},
-        "e": {"count": 10},
-        "f": {"count": 1},
-        "placeholder": {"count": 0},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "placeholder": {"count": 0},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 12},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      },
-      {
-        "Screwdriver": {"count": 10},
-        "Hotglue": {"count": 1}
-      }
+        {
+            "a": {"count": 10},
+            "Screwdriver": {"count": 0},
+            "b": {"count": 1},
+            "c": {"count": 0},
+            "d": {"count": 1},
+            "e": {"count": 0},
+            "f": {"count": 0},
+            "Invalid name": {"count": 1},
+            "placeholder": {"count": 0},
+            "Hotglue": {"count": 0}
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
     ],
     "columns": 5,
-    "bounds": [
-      150,
-      125,
-      200,
-      40
-    ],
-    "sort": "Slot"
-  },
-  "Big Cabinet": {
-    "slots": [{}],
-    "columns": 3,
-    "bounds": [
-      750,
-      600,
-      200,
-      40
-    ],
-    "sort": "Number of items"
-  },
-  "Blue Cabinet": {
-    "slots": [{}],
-    "columns": 1,
-    "bounds": [
-      750,
-      400,
-      200,
-      40
-    ],
-    "sort": "Slot"
-  }
-}
+    "sort": "Slot",
+    "points": [
+        [
+            100,
+            100
+        ],
+        [
+            200,
+            100
+        ],
+        [
+            200,
+            200
+        ],
+        [
+            100,
+            200
+        ]
+    ]
+}}

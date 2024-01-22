@@ -1,107 +1,247 @@
 package com.inventory;
 
-import java.awt.Color;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Polygon;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import javax.swing.*;
 import java.util.EventListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+public class ItemsPanel extends JPanel implements ActionListener {
+    EventListener listener;
+    Inventory inv;
+    JPanel itemsPanel;
+    JLabel itemTitle;
+    JButton itemPreview;
+    JTextField countField;
+    JPanel dimPanel;
+    JButton addItemButton;
+//    private final JPanel itemsPanel = new JPanel(new GridLayout(5, 5, GUI.GAP, GUI.GAP));
+//    private final JScrollPane scrollable = new JScrollPane(itemsPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//    private final JPanel optionsPanel = new JPanel(null);
+//    private final JLabel itemTitle = new JLabel();
+//    private final JLabel imagePreview = new JLabel();
+//    private final JButton subButton = new JButton("-1");
+//    private final JTextField countField = new JTextField();
+//    private final JButton addButton = new JButton("+1");
+//    private final JPanel dimPanel = new JPanel(new GridLayout(1, 3, 0, GUI.GAP));
+//    private final JTextField widthField = new JTextField();
+//    private final JTextField heightField = new JTextField();
 
-public class ItemsPanel extends Panel {
-    private final JPanel itemsPanel = new JPanel(new GridLayout(5, 5, GUI.GAP, GUI.GAP));
-    private final JScrollPane scrollable = new JScrollPane(itemsPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    private final JPanel optionsPanel = new JPanel(null);
-    private final JLabel itemTitle = new JLabel();
-    private final JLabel imagePreview = new JLabel();
-    private final JButton subButton = new JButton("-1");
-    private final JTextField countField = new JTextField();
-    private final JButton addButton = new JButton("+1");
-    private final JPanel dimPanel = new JPanel(new GridLayout(1, 3, 0, GUI.GAP));
-    private final JTextField widthField = new JTextField();
-    private final JTextField heightField = new JTextField();
-    
-    public ItemsPanel(EventListener listener, int w, int h) {
-        super(listener, w, h);
+    public ItemsPanel(EventListener listener, Inventory inv) {
+        this.listener = listener;
+        this.inv = inv;
+        setLayout(new BorderLayout());
         
-        optionsPanel.setBounds(WIDTH/5*3, 0, WIDTH/5*2, HEIGHT);
-        optionsPanel.setBackground(GUI.backgroundColour);
-        itemsPanel.setBackground(GUI.backgroundColour);
-        scrollable.setBounds(0, 0, WIDTH/5*3, HEIGHT);
+        addItemButton = new JButton("+");
+        addItemButton.addActionListener((ActionListener) listener);
+        addItemButton.setActionCommand("addItem");
+        addItemButton.setOpaque(false);
         
-        int width = optionsPanel.getWidth()-GUI.GAP*2;
-        itemTitle.setBounds(GUI.GAP, GUI.GAP, width, GUI.GAP*3);
-        itemTitle.setBackground(GUI.secondaryColour);
-        itemTitle.setForeground(GUI.textColour);
+        itemsPanel = new JPanel(new GridLayout(5, 5, 5, 5));
+        JScrollPane scrollable = new JScrollPane(
+            itemsPanel,
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
         
-        imagePreview.setBounds(GUI.GAP, GUI.GAP*5, width, width);
+        JPanel contentPanel = new JPanel(new BorderLayout(0, 10));
+        contentPanel.setBackground(Handler.BACKGROUND);
+        contentPanel.setPreferredSize(new Dimension(310, 0));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
-        subButton.setName("subItemCount");
-        countField.setName("itemCount");
-        addButton.setName("addItemCount");
         
-        int itemWidth = (width - GUI.GAP*2)/3;
         
-        JComponent[] controls = {subButton, countField, addButton};
-        for (int i = 0; i < controls.length; i++) {
-            controls[i].setBounds(GUI.GAP*(i+1)+itemWidth*i, width+GUI.GAP*7, itemWidth, GUI.GAP*3);
-            
-            if (controls[i] instanceof JButton) {
-                ((JButton) controls[i]).addActionListener((ActionListener) listener);
-            } else if (controls[i] instanceof JTextField) {
-                ((JTextField) controls[i]).addActionListener((ActionListener) listener);
-            }
-            
-            optionsPanel.add(controls[i]);
-        }
+        itemTitle = new JLabel("Placeholder", SwingConstants.CENTER);
+        itemTitle.setPreferredSize(new Dimension(100, 33));
+        itemTitle.setForeground(Handler.FOREGROUND);
         
-        dimPanel.setVisible(false);
-        dimPanel.setBounds(GUI.GAP, width+GUI.GAP*15, width, GUI.GAP*5);
-        dimPanel.setOpaque(false);
+        itemPreview = new JButton("No preview available");
+        itemPreview.setActionCommand("setItemImage");
+        itemPreview.setPreferredSize(new Dimension(290, 290));
+        itemPreview.addActionListener(this);
+        itemPreview.setOpaque(false);
+        
+        JPanel infoPanel = new JPanel(new BorderLayout(0, 5));
+        infoPanel.setBackground(Handler.SECONDARY);
+        
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        infoPanel.add(itemTitle, BorderLayout.NORTH);
+        infoPanel.add(itemPreview, BorderLayout.CENTER);
+        
+        
+        JButton remButton = new JButton("-1");
+        remButton.addActionListener(this);
+        remButton.setActionCommand("remCount");
+        remButton.setOpaque(false);
+        
+        countField = new JTextField();
+        countField.addActionListener(this);
+        countField.setActionCommand("countField");
+        
+        JButton addButton = new JButton("+1");
+        addButton.addActionListener(this);
+        addButton.setActionCommand("addCount");
+        addButton.setOpaque(false);
+        
+        
+        JPanel countPanel = new JPanel(new GridLayout(1, 3, 5, 0));
+        countPanel.setBackground(Handler.THIRD);
+        countPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        countPanel.setPreferredSize(new Dimension(0, 66));
+        countPanel.add(remButton);
+        countPanel.add(countField);
+        countPanel.add(addButton);
+        
+        // dimension
+        JTextField widthField = new JTextField();
+        widthField.setActionCommand("widthField");
+        widthField.addActionListener(this);
+        
         JLabel dimLabel = new JLabel("X", SwingConstants.CENTER);
-        dimLabel.setForeground(Color.WHITE);
-        JComponent[] dimensions = {widthField, dimLabel, heightField};
-        for (int i = 0; i < dimensions.length; i++) {
-            if (dimensions[i] instanceof JButton) {
-                ((JButton) dimensions[i]).addActionListener((ActionListener) listener);
-            }
-            dimPanel.add(dimensions[i]);
-        }
+        dimLabel.setOpaque(false);
         
-        widthField.setName("setWidth");
-        heightField.setName("setHeight");
+        JTextField heightField = new JTextField();
+        heightField.setActionCommand("heightField");
+        heightField.addActionListener(this);
         
-        optionsPanel.add(dimPanel);
-        optionsPanel.add(itemTitle);
-        optionsPanel.add(imagePreview);
-        optionsPanel.add(backButton);
-        this.add(optionsPanel);
-        this.add(scrollable);
+        dimPanel = new JPanel(new GridLayout(1, 3, 5, 0));
+        dimPanel.setBackground(Handler.THIRD);
+        dimPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        dimPanel.setPreferredSize(new Dimension(0, 66));
+        dimPanel.add(widthField);
+        dimPanel.add(dimLabel);
+        dimPanel.add(heightField);
+        
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener((ActionListener) listener);
+        backButton.setActionCommand("slots");
+        backButton.setOpaque(false);
+        
+        
+        JPanel controlPanel = new JPanel(new GridLayout(3, 1, 0, 50));
+        controlPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        controlPanel.setBackground(Handler.SECONDARY);
+        controlPanel.add(countPanel);
+        controlPanel.add(dimPanel);
+        controlPanel.add(backButton);
+        
+        contentPanel.add(infoPanel, BorderLayout.NORTH);
+        contentPanel.add(controlPanel, BorderLayout.CENTER);
+        
+        add(contentPanel, BorderLayout.EAST);
+        add(scrollable);
     }
     
-    public void refresh(EventListener listener, Inventory inv, String loc, int index) {
-        int size = ((WIDTH/5*2)-GUI.GAP*4)/5;
+    @Override
+    public void setVisible(boolean aFlag) {
+        super.setVisible(aFlag);
+        if (!aFlag) return;
         
         itemsPanel.removeAll();
-        for (String itemName: inv.getItems(loc, index)) {
-            String name = "%s: %d".formatted(itemName, inv.getItemCount(loc, index, itemName));
-            GridButton button = new GridButton(listener, "item|%s".formatted(itemName), name);
-            button.setButtonSize(size);
+        for (String itemName: inv.getItems()) {
+            inv.setItem(itemName);
+            JButton button = new JButton();
+            button.setText("%s: %d".formatted(itemName, inv.getItemCount()));
+            button.setActionCommand("item|%s".formatted(itemName));
+            button.addActionListener(this);
+            button.setName("item");
             itemsPanel.add(button);
         }
-        
-        GridButton addItemButton = new GridButton(listener, "addItem|null", "+"); // null is placeholder
-        addItemButton.setButtonSize(size);
         itemsPanel.add(addItemButton);
+        inv.setItem(null);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        
+        String itemName = inv.getItemName();
+        if (itemName == null) { // reset
+            itemTitle.setText("Placeholder");
+            itemPreview.setText("No preview available");
+            countField.setText("0");
+            dimPanel.setVisible(false);
+        } else {
+            itemTitle.setText(itemName);
+        
+            Image image = new ImageIcon("%s/%s.png".formatted(Handler.FOLDER, itemName)).getImage();
+            Image scaled = image.getScaledInstance(itemPreview.getWidth(), itemPreview.getHeight(), Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(scaled);
+            itemPreview.setIcon(imageIcon);
+
+            int count = inv.getItemCount();
+            countField.setText(Integer.toString(count));
+        }
     }
     
-    public void update(String itemName, int count) {
-        itemTitle.setText(itemName);
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String[] actionInfo = e.getActionCommand().split("\\|");
+        String action = actionInfo[0];
         
-        ImageIcon icon = new ImageIcon("%s/%s.png".formatted(GUI.FOLDER, itemName));
-        ImageIcon scaled = new ImageIcon(icon.getImage().getScaledInstance(imagePreview.getWidth(), imagePreview.getWidth(), Image.SCALE_SMOOTH));
-        imagePreview.setIcon(scaled);
-        
-        countField.setText(Integer.toString(count));
+        switch (action) {
+            case "setItemImage" -> {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setAcceptAllFileFilterUsed(false);
+
+                chooser.setDialogTitle("Select an image for the location preview");
+
+                FileNameExtensionFilter restriction = new FileNameExtensionFilter("Select a .png file", "png");
+                chooser.addChoosableFileFilter(restriction);
+
+                int r = chooser.showOpenDialog(null);
+                if (r == JFileChooser.APPROVE_OPTION) {
+                    Path source = new File(chooser.getSelectedFile().getAbsolutePath()).toPath();
+                    Path destination = new File("%s/%s/%s.png".formatted(Handler.FOLDER, "Item", inv.getLocationName())).toPath();
+                    
+                    try {
+                        Files.copy(source, destination);
+                        setVisible(true); // reload
+                    } catch (IOException exception) {
+                        itemPreview.setText("An error has occured");
+                        System.out.println(exception);
+                    }
+                }
+                    
+                    
+
+                    // set the label to the path of the selected file
+    //                    l.setText(j.getSelectedFile().getAbsolutePath());
+            } case "remCount" -> {
+                int count = inv.getItemCount();
+                inv.setItemCount(count-1);
+            } case "countField" -> {
+                String value = ((JTextField) e.getSource()).getText();
+                int count = Integer.parseInt(value);
+                inv.setItemCount(count);
+            } case "addCount" -> {
+                int count = inv.getItemCount();
+                inv.setItemCount(count+1);
+            } case "widthField" -> {
+                
+            } case "heightField" -> {
+                
+            } case "item" -> {
+                inv.setItem(actionInfo[1]);
+                
+            }
+        }
+        repaint();
     }
 }

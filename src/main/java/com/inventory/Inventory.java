@@ -1,12 +1,11 @@
 package com.inventory;
 
-import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.json.JSONArray;
 
 import org.json.JSONObject;
@@ -16,6 +15,9 @@ public class Inventory {
     public static final String FOLDER = "Inventory/";
     public static final String PATH = FOLDER + "Inventory.json";
     public static final String ITEMS_PATH = FOLDER + "ItemList.json";
+    private String loc;
+    private int index;
+    private String itemName;
     private JSONObject inv;
     private JSONObject items;
     
@@ -31,122 +33,193 @@ public class Inventory {
         items = load(ITEMS_PATH);
     }
     
-    private JSONObject getLocation(String loc) {
+    // get items
+    public String[] getItemsList() {
+        return JSONObject.getNames(items);
+    }
+    public boolean hasItemList(String itemName) {
+        return items.has(itemName);
+    }
+    public void setItemList(String itemName) {
+        items.put(itemName, new JSONObject());
+    }
+    
+    public boolean hasItem(String itemName) {
+        JSONObject slot = getSlot();
+        return slot.has(itemName);
+    }
+    
+    // get current
+    public String getLocationName() {
+        return loc;
+    }
+    
+    public int getSlotIndex() {
+        return index;
+    }
+    
+    public String getItemName () {
+        return itemName;
+    }
+    
+    // get JSONObject
+    private JSONObject getLocation() {
         return inv.getJSONObject(loc);
     }
     
-    private JSONObject getSlot(String loc, int index) {
-        JSONObject location = this.getLocation(loc);
+    private JSONObject getSlot() {
+        JSONObject location = getLocation();
         return location.getJSONArray("slots").getJSONObject(index);
     }
     
-    private JSONObject getItem(String loc, int index, String itemName) {
-        JSONObject slot = this.getSlot(loc, index);
+    private JSONObject getItem() {
+        JSONObject slot = getSlot();
         return slot.getJSONObject(itemName);
     }
     
-    public String getLocationSort(String loc) {
-        JSONObject location = this.getLocation(loc);
+    // set current
+    public void setLocation(String loc) {
+        this.loc = loc;
+    }
+    public void setSlot(int index) {
+        this.index = index;
+    }
+    public void setItem(String itemName) {
+        this.itemName = itemName;
+    }
+    
+    // check
+    public boolean hasLocation() {
+        return inv.has(loc);
+    }
+    
+    // getLocation
+    public void setLocation(ArrayList<int[]> points) {
+        JSONObject data = new JSONObject();
+        data.put("slots", new JSONArray());
+        data.put("columns", 3);
+        data.put("sort", "Slot");
+        data.put("points", points);
+        
+        inv.put(loc, data);
+    }
+    public void remLocation() {
+        inv.remove(loc);
+    }
+    
+    public String getLocationSort() {
+        JSONObject location = this.getLocation();
         return location.getString("sort");
     }
     
-    public void setLocationSort(String loc, String sort) {
-        JSONObject location = this.getLocation(loc);
+    public void setLocationSort(String sort) {
+        JSONObject location = this.getLocation();
         location.put("sort", sort);
     }
     
-    public int getLocationColumns(String loc) {
-        JSONObject location = this.getLocation(loc);
+    public int getLocationColumns() {
+        JSONObject location = this.getLocation();
         return location.getInt("columns");
     }
     
-    public void setLocationColumns(String loc, int columns) {
-        JSONObject location = this.getLocation(loc);
+    public void setLocationColumns(int columns) {
+        JSONObject location = this.getLocation();
         location.put("columns", columns);
     }
         
-    public int getNumSlots(String loc) {
-        JSONObject location = this.getLocation(loc);
+    public int getNumSlots() {
+        JSONObject location = this.getLocation();
         return location.getJSONArray("slots").length();
     }
     
-    public int getSlotItemsCount(String loc, int index) {
-        JSONObject slot = this.getSlot(loc, index);
+    public int getSlotItemsCount() {
+        JSONObject slot = this.getSlot();
         return slot.length(); // returns num elements
     }
     
-    public int getSlotTotalItemsCount(String loc, int index) {
-        JSONObject slot = this.getSlot(loc, index);
+    public int getSlotTotalItemsCount() {
+        JSONObject slot = this.getSlot();
         int total = 0;
         
         if (slot.length() == 0) {
             return 0;
         }
         
-        for (Object itemName: slot.names()) { // null if empty
-            JSONObject item = slot.getJSONObject((String) itemName); // object into string
-            total += item.getInt("count");
+        for (Object item: slot.names()) { // null if empty
+            JSONObject itemData = slot.getJSONObject((String) item); // object into string
+            total += itemData.getInt("count");
         }
         
         return total;
     }
     
-    public void addItem(String loc, int index, String itemName, int count) {
+    public void addItem(int count) {
         JSONObject item = new JSONObject();
         item.put("count", count);
         
-        JSONObject slot = this.getSlot(loc, index);
+        JSONObject slot = this.getSlot();
         slot.put(itemName, item);
     }
     
-    public int getItemCount(String loc, int index, String itemName) { // cuh
-        JSONObject item = this.getItem(loc, index, itemName);
+    public int getItemCount() { // cuh
+        JSONObject item = this.getItem();
         return item.getInt("count");
     }
     
-    public boolean setItemCount(String loc, int index, String itemName, int count) {
+    public boolean setItemCount(int count) {
         if (count >= 0) {
-            JSONObject item = this.getItem(loc, index, itemName);
+            JSONObject item = this.getItem();
             item.put("count", count);
             return true;
         }
         return false;
     }
     
-    public String[] getItems(String loc, int index) {
-        JSONObject slot = this.getSlot(loc, index);
-        String[] items = JSONObject.getNames(slot);
+    public String[] getItems() {
+        JSONObject slot = this.getSlot();
+        String[] itemsList = JSONObject.getNames(slot);
         
-        if (items == null) {
-            items = new String[0];
+        if (itemsList == null) {
+            itemsList = new String[0];
         }
         
-        return items;
+        return itemsList;
     }
     
-    public String getSort(String loc) {
-        JSONObject location = this.getLocation(loc);
+    public String getSort() {
+        JSONObject location = this.getLocation();
         return location.getString("sort");
     }
     
-    public String[] getLocations() {
-        return JSONObject.getNames(inv);
+    public ArrayList<String> getLocations() {
+        ArrayList<String> list = new ArrayList(Arrays.asList(JSONObject.getNames(inv)));
+        return list;
     }
     
-    public Rectangle getBounds(String loc) {
-        JSONObject location = this.getLocation(loc);
-        JSONArray bounds = location.getJSONArray("bounds");
-        return new Rectangle(bounds.getInt(0), bounds.getInt(1), bounds.getInt(2), bounds.getInt(3));
+    public int[][] getLocationPoints() {
+        int[][] points = new int[4][2];
+        
+        JSONObject location = this.getLocation();
+        
+        JSONArray pointArrays = location.getJSONArray("points"); // array of arrays
+        for (int i = 0; i < 4; i++) {
+            JSONArray point = pointArrays.getJSONArray(i);
+            points[i][0] = point.getInt(0);
+            points[i][1] = point.getInt(1);
+        }
+        
+        return points;
     }
     
     public void save() {
         String[] paths = {PATH, ITEMS_PATH};
-        for (String path: paths) {
-            try (FileWriter file = new FileWriter(path);) {
-                file.write(inv.toString(2));            
+        JSONObject[] datas = {inv, items};
+        for (int i = 0; i < paths.length; i++) {
+            try (FileWriter file = new FileWriter(paths[i]);) {
+                file.write(datas[i].toString(4));            
                 file.close();
             } catch (IOException e) { // file doesn't exist
-                new File(path); // create file
+                new File(paths[i]); // create file
                 save();
             }
         }
