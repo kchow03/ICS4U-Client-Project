@@ -7,7 +7,6 @@ import java.awt.Image;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -159,7 +158,7 @@ public class Handler extends JFrame implements ActionListener, MouseListener, Ch
                 
 //            } case "" -> {
                 
-            }default -> { // jtextfield
+            } default -> { // jtextfield
                 if (!(e.getSource() instanceof JTextField)) { // destination
                     String[] actionInfo = e.getActionCommand().split("\\|");
                     String destination = actionInfo[0];

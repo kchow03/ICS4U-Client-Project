@@ -8,8 +8,14 @@ import java.awt.event.MouseListener;
 import javax.swing.*;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.EventListener;
+import javax.imageio.ImageIO;
 
 public class LocationsPanel extends JLabel implements MouseMotionListener, ActionListener {
     final static Color ACTIVE_COLOR = new Color(255, 0, 0, 128);
@@ -83,16 +89,16 @@ public class LocationsPanel extends JLabel implements MouseMotionListener, Actio
         
         
         // settings button
-        Image settingsImage = new ImageIcon("Settings.png").getImage();
-        ImageIcon settingsIcon = new ImageIcon(settingsImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-        
         settingsButton = new JButton();
         settingsButton.setPreferredSize(new Dimension(50, 0));
         settingsButton.setContentAreaFilled(false); // transparent background
         settingsButton.setActionCommand("showSettings");
         settingsButton.addActionListener(this);
-        settingsButton.setIcon(settingsIcon);
         
+        Image settingsImage = new ImageIcon(getClass().getResource("/Settings.png")).getImage();
+        ImageIcon settingsIcon = new ImageIcon(settingsImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+        settingsButton.setIcon(settingsIcon);
+
         JPanel settingsButtonPanel = new JPanel(new BorderLayout());
         settingsButtonPanel.setPreferredSize(new Dimension(0, 50));
         settingsButtonPanel.setOpaque(false);

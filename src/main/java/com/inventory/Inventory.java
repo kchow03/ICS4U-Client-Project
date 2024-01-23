@@ -12,22 +12,15 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 public class Inventory {
-    public static final String FOLDER = "Inventory/";
-    public static final String PATH = FOLDER + "Inventory.json";
-    public static final String ITEMS_PATH = FOLDER + "ItemList.json";
+    public static final String PATH = Handler.FOLDER + "Inventory.json";
+    public static final String ITEMS_PATH = Handler.FOLDER + "ItemList.json";
     private String loc;
     private int index;
     private String itemName;
     private JSONObject inv;
     private JSONObject items;
     
-    public Inventory() {
-        // check if folder exists
-        File folder = new File(FOLDER);
-        if (!folder.exists()) {
-            folder.mkdir();
-        }
-        
+    public Inventory() {        
         // load db files
         inv = load(PATH);
         items = load(ITEMS_PATH);
