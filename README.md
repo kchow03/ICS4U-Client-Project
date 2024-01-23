@@ -3,28 +3,32 @@ Description here
 
 <br>
 
+# [🧨 Release](https://github.com/kchow03/ICS4U-Client-Project/releases/latest)
+Full release
+
+<br>
+
 ## ✨ Expectations / Features
 - [x] JSON-based filesystem
 - [x] Each compartment has an inventory
 - [x] Inventory system
-- [ ] Support for CAD files
-  - [ ] Common File Types
-    - [ ] OBJ
-    - [ ] FBX
-    - [ ] gITF
-    - [ ] usd/usdz
-  - [ ] Others
-    - [ ] IGES
-    - [ ] STP/STEP
-    - [ ] IPT
-    - [ ] IAM
-    - [ ] SLD
-    - [ ] JT
-    - [ ] Blend
-    - [ ] etc.
-- [ ] Graphical interface
-- [ ] Student sign-out system
-- [ ] Map based interface
+- [ ] ~~Support for CAD files~~
+  - [ ] ~~Common File Types~~
+    - [ ] ~~OBJ~~
+    - [ ] ~~FBX~~
+    - [ ] ~~gITF~~
+    - [ ] ~~usd/usdz~~
+  - [ ] ~~Others~~
+    - [ ] ~~IGES~~
+    - [ ] ~~STP/STEP~~
+    - [ ] ~~IPT~~
+    - [ ] ~~IAM~~
+    - [ ] ~~SLD~~
+    - [ ] ~~JT~~
+    - [ ] ~~Blend~~
+    - [ ] ~~etc.~~
+- [x] Graphical interface
+- [x] Map based interface
 - [ ] Zooming animation
 - [ ] Website?
 <br>
