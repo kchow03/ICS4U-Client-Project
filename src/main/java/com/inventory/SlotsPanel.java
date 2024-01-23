@@ -164,6 +164,8 @@ public class SlotsPanel extends JPanel implements ActionListener, ChangeListener
         }
         slotsPanel.add(addSlotButton); // last
         slotsPanel.getParent().repaint();
+        
+        revalidate();
     }
     
     @Override
