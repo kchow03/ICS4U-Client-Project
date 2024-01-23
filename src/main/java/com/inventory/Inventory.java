@@ -153,6 +153,21 @@ public class Inventory {
         return total;
     }
     
+    public void addSlot() {
+        JSONObject location = getLocation();
+        JSONArray slots = location.getJSONArray("slots");
+        
+        JSONObject data = new JSONObject();
+        slots.put(data);
+    }
+    
+    public void remSlot() {
+        JSONObject location = getLocation();
+        JSONArray slots = location.getJSONArray("slots");
+        
+        slots.remove(index);
+    }
+    
     public void addItem(int count) {
         JSONObject item = new JSONObject();
         item.put("count", count);
@@ -192,7 +207,9 @@ public class Inventory {
     }
     
     public ArrayList<String> getLocations() {
-        ArrayList<String> list = new ArrayList(Arrays.asList(JSONObject.getNames(inv)));
+        String[] locations = inv.isEmpty() ? new String[0] : JSONObject.getNames(inv);
+        ArrayList<String> list = new ArrayList(Arrays.asList(locations));
+        
         return list;
     }
     
@@ -212,8 +229,21 @@ public class Inventory {
     }
     
     public void save() {
+        // cleanup inv
+        for (String loc: getLocations()) {
+            setLocation(loc);
+            for (int i = 0; i < getNumSlots(); i++) {
+                setSlot(i);
+                // removes slot if empty
+                if (getSlotTotalItemsCount() == 0) remSlot();
+            }   
+        }
+        
+        
+        
         String[] paths = {PATH, ITEMS_PATH};
         JSONObject[] datas = {inv, items};
+        
         for (int i = 0; i < paths.length; i++) {
             try (FileWriter file = new FileWriter(paths[i]);) {
                 file.write(datas[i].toString(4));            

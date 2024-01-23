@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -72,10 +73,13 @@ public class Handler extends JFrame implements ActionListener, MouseListener, Ch
             File folder = new File(FOLDER);
             folder.mkdir(); // create folder for future use
             
-            File locations = new File(FOLDER + "Locations");
-            locations.mkdir();
+            String[] folders = {"Locations", "Items"};
+            for (String subFolder: folders) {
+                new File(FOLDER, subFolder).mkdir();
+            }
             
             setSize(640, 480);
+            cards.add(new JLabel("Not found: %appdata%/com.inventory/topdown.png"));
         }
         
         add(cards);

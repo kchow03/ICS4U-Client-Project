@@ -3,27 +3,19 @@ package com.inventory;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import javax.swing.*;
 import java.util.EventListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class ItemsPanel extends JPanel implements ActionListener {
-    EventListener listener;
     Inventory inv;
     JPanel itemsPanel;
     JLabel itemTitle;
@@ -31,20 +23,8 @@ public class ItemsPanel extends JPanel implements ActionListener {
     JTextField countField;
     JPanel dimPanel;
     JButton addItemButton;
-//    private final JPanel itemsPanel = new JPanel(new GridLayout(5, 5, GUI.GAP, GUI.GAP));
-//    private final JScrollPane scrollable = new JScrollPane(itemsPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-//    private final JPanel optionsPanel = new JPanel(null);
-//    private final JLabel itemTitle = new JLabel();
-//    private final JLabel imagePreview = new JLabel();
-//    private final JButton subButton = new JButton("-1");
-//    private final JTextField countField = new JTextField();
-//    private final JButton addButton = new JButton("+1");
-//    private final JPanel dimPanel = new JPanel(new GridLayout(1, 3, 0, GUI.GAP));
-//    private final JTextField widthField = new JTextField();
-//    private final JTextField heightField = new JTextField();
 
     public ItemsPanel(EventListener listener, Inventory inv) {
-        this.listener = listener;
         this.inv = inv;
         setLayout(new BorderLayout());
         
@@ -151,7 +131,7 @@ public class ItemsPanel extends JPanel implements ActionListener {
     @Override
     public void setVisible(boolean aFlag) {
         super.setVisible(aFlag);
-        if (!aFlag) return;
+        if (!aFlag) return;        
         
         itemsPanel.removeAll();
         for (String itemName: inv.getItems()) {
@@ -177,10 +157,12 @@ public class ItemsPanel extends JPanel implements ActionListener {
             itemPreview.setText("No preview available");
             countField.setText("0");
             dimPanel.setVisible(false);
+            itemPreview.setEnabled(false);
         } else {
+            itemPreview.setEnabled(true);
             itemTitle.setText(itemName);
-        
-            Image image = new ImageIcon("%s/%s.png".formatted(Handler.FOLDER, itemName)).getImage();
+
+            Image image = new ImageIcon("%s/Items/%s.png".formatted(Handler.FOLDER, itemName)).getImage();
             Image scaled = image.getScaledInstance(itemPreview.getWidth(), itemPreview.getHeight(), Image.SCALE_SMOOTH);
             ImageIcon imageIcon = new ImageIcon(scaled);
             itemPreview.setIcon(imageIcon);
@@ -208,8 +190,8 @@ public class ItemsPanel extends JPanel implements ActionListener {
                 int r = chooser.showOpenDialog(null);
                 if (r == JFileChooser.APPROVE_OPTION) {
                     Path source = new File(chooser.getSelectedFile().getAbsolutePath()).toPath();
-                    Path destination = new File("%s/%s/%s.png".formatted(Handler.FOLDER, "Item", inv.getLocationName())).toPath();
-                    
+                    Path destination = new File("%s/%s".formatted(Handler.FOLDER, "Items"), "%s.png".formatted(inv.getItemName())).toPath();
+                                        
                     try {
                         Files.copy(source, destination);
                         setVisible(true); // reload

@@ -4,11 +4,9 @@ import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.io.IOException;
 
 
 public class AddItemPanel extends JPanel implements ActionListener {
-    EventListener listener;
     Inventory inv;
     JPanel itemsPanel;
     JTextField nameField;
@@ -16,7 +14,6 @@ public class AddItemPanel extends JPanel implements ActionListener {
     JButton backButton;
 
     public AddItemPanel(EventListener listener, Inventory inv) {
-        this.listener = listener;
         this.inv = inv;
         setLayout(new BorderLayout());
         
@@ -90,6 +87,10 @@ public class AddItemPanel extends JPanel implements ActionListener {
     public void setVisible(boolean aFlag) {
         super.setVisible(aFlag);
         if (!aFlag) return;
+        
+        nameField.setText(null);
+        countField.setText(null);
+        
         backButton.setActionCommand("items|"+inv.getSlotIndex());
         itemsPanel.removeAll();
         for (String itemName: inv.getItemsList()) {
@@ -110,7 +111,7 @@ public class AddItemPanel extends JPanel implements ActionListener {
             case "confirmButton" -> {
                 String name = nameField.getText();
                 
-                if (name.isBlank()) {
+                if (name.isBlank() || name.equals("Invalid name")) {
                     nameField.setText("Invalid name");
                     return;
                 }
@@ -123,7 +124,8 @@ public class AddItemPanel extends JPanel implements ActionListener {
                             inv.setItem(name);
                             inv.addItem(count);
                             backButton.doClick();
-
+                            inv.setItem(name);
+                            
                             if (!inv.hasItemList(name)) {
                                 inv.setItemList(name);
                             }

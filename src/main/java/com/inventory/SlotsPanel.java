@@ -9,14 +9,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.swing.event.ChangeEvent;
 
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 public class SlotsPanel extends JPanel implements ActionListener, ChangeListener {
     static final String[] SORT_METHODS = {"Slot", "Number of items", "Total number of items"};
-    Inventory inv;
     EventListener listener;
+    Inventory inv;
     JButton imageButton;
     JLabel locationTitle;
     JPanel slotsPanel;
@@ -104,14 +105,11 @@ public class SlotsPanel extends JPanel implements ActionListener, ChangeListener
         if (!aFlag) return;
         
         String loc = inv.getLocationName();
-        
-        
         String path = String.format("%s/%s/%s.png", Handler.FOLDER, "Locations", loc); 
         Image image = new ImageIcon(path).getImage();
         
         Image scaledImage = image.getScaledInstance(imageButton.getWidth(), imageButton.getHeight(), Image.SCALE_SMOOTH);
         imageButton.setIcon(new ImageIcon(scaledImage));
-        
         locationTitle.setText(loc);
         
         // force no listener
@@ -136,6 +134,7 @@ public class SlotsPanel extends JPanel implements ActionListener, ChangeListener
             button.addActionListener((ActionListener) listener);
             slotsPanel.add(button);
         }
+        slotsPanel.add(addSlotButton);
         repaint();
     }
     
@@ -145,13 +144,12 @@ public class SlotsPanel extends JPanel implements ActionListener, ChangeListener
         
         GridLayout gl = (GridLayout) slotsPanel.getLayout();
         gl.setColumns(inv.getLocationColumns());
-        
+                
         slotsPanel.remove(addSlotButton);
         ArrayList<JButton> buttons = new ArrayList<>();
         for (Component button: slotsPanel.getComponents()) {
             buttons.add((JButton) button);
         }
-        slotsPanel.removeAll();
         
         java.util.List<String> sorts = Arrays.asList(SORT_METHODS);
         Collections.sort(buttons, Comparator.comparingInt(button -> {
@@ -160,11 +158,12 @@ public class SlotsPanel extends JPanel implements ActionListener, ChangeListener
             
             return Integer.parseInt(value);
         }));
+        slotsPanel.removeAll();
         for (JButton button: buttons) {
             slotsPanel.add(button);
         }
-        // last
-        slotsPanel.add(addSlotButton);
+        slotsPanel.add(addSlotButton); // last
+        slotsPanel.getParent().repaint();
     }
     
     @Override
@@ -180,31 +179,30 @@ public class SlotsPanel extends JPanel implements ActionListener, ChangeListener
 
                 FileNameExtensionFilter restriction = new FileNameExtensionFilter("Select a .png file", "png");
                 chooser.addChoosableFileFilter(restriction);
-
+                
                 int r = chooser.showOpenDialog(null);
                 if (r == JFileChooser.APPROVE_OPTION) {
-                    Path source = new File(chooser.getSelectedFile().getAbsolutePath()).toPath();
-                    Path destination = new File("%s/%s/%s.png".formatted(Handler.FOLDER, "Location", inv.getLocationName())).toPath();
+                    Path source = Paths.get(chooser.getSelectedFile().getAbsolutePath());
                     
+                    String destination = "%s/%s".formatted(Handler.FOLDER, "Locations");
+                    File destinFile = new File(destination, "%s.png".formatted(inv.getLocationName()));
+                    Path destinPath = destinFile.toPath();
+                                        
                     try {
-                        Files.copy(source, destination);
+                        Files.copy(source, destinPath);
                         setVisible(true); // reload
                     } catch (IOException exception) {
                         imageButton.setText("An error has occured");
-                        System.out.println(exception);
                     }
-                    
-                    
-
-                    // set the label to the path of the selected file
-    //                    l.setText(j.getSelectedFile().getAbsolutePath());
                 }
             } case "setSort" -> {
                 String value = (String) ((JComboBox) e.getSource()).getSelectedItem();
                 inv.setLocationSort(value);
                 repaint();
-                revalidate();
-            } 
+            } case "addSlot" -> {
+                inv.addSlot();
+                setVisible(true);
+            }
         }
     };
     
@@ -213,6 +211,5 @@ public class SlotsPanel extends JPanel implements ActionListener, ChangeListener
         int value = ((JSlider) e.getSource()).getValue();
         inv.setLocationColumns(value);
         repaint();
-        slotsPanel.revalidate();
     };
 }
